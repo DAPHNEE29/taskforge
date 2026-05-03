@@ -1,0 +1,74 @@
+# ============================================================
+# TaskForge — Fichier de configuration des tâches
+# Projet 5 ENSPD — Cours Rust
+# ============================================================
+# Chaque [[tasks]] décrit une tâche planifiée.
+#
+# Champs :
+#   name         (requis)  Identifiant unique de la tâche
+#   command      (requis)  Commande shell à exécuter
+#   schedule     (requis)  Expression cron ou macro
+#   timeout_secs (optionnel) Timeout en secondes
+#   enabled      (défaut: true) Activer/désactiver la tâche
+#   description  (optionnel) Description lisible
+#
+# Retry (optionnel) :
+#   [tasks.retry]
+#   kind = "none"         (défaut, pas de retry)
+#   kind = "immediate"    + max_retries = 3
+#   kind = "fixed"        + max_retries = 3  + delay_secs = 10
+#   kind = "exponential"  + max_retries = 3  + initial_delay_secs = 2
+#
+# Macros : @daily @hourly @weekly @monthly @every Xm @every Xh @every Xs
+# ============================================================
+
+# ---- Tâche 1 : Sauvegarde nocturne ----
+[[tasks]]
+name        = "backup_db"
+command     = "echo '[backup] Sauvegarde démarrée...' && sleep 1 && echo '[backup] Terminé.'"
+schedule    = "@daily"
+timeout_secs = 300
+description = "Sauvegarde nocturne de la base de données"
+enabled     = true
+
+[tasks.retry]
+kind        = "fixed"
+max_retries = 3
+delay_secs  = 60
+
+# ---- Tâche 2 : Nettoyage fichiers temporaires ----
+[[tasks]]
+name        = "nettoyage_tmp"
+command     = "echo '[nettoyage] Suppression des fichiers temporaires anciens...'"
+schedule    = "0 3 * * 0"
+description = "Nettoyage hebdomadaire"
+enabled     = true
+
+# ---- Tâche 3 : Monitoring système ----
+[[tasks]]
+name        = "monitoring"
+command     = "echo '[monitoring] Uptime:' && uptime"
+schedule    = "@every 30m"
+timeout_secs = 30
+description = "Monitoring système toutes les 30 minutes"
+enabled     = true
+
+# ---- Tâche 4 : Test rapide (toutes les 2 minutes) ----
+[[tasks]]
+name        = "test_rapide"
+command     = "echo '[test] TaskForge fonctionne! Date:' && date"
+schedule    = "*/2 * * * *"
+description = "Tâche de démonstration — toutes les 2 minutes"
+enabled     = true
+
+# ---- Tâche 5 : Rapport hebdomadaire (désactivée) ----
+[[tasks]]
+name        = "rapport_hebdo"
+command     = "echo '[rapport] Génération du rapport hebdomadaire...'"
+schedule    = "@weekly"
+description = "Rapport hebdomadaire (désactivé par défaut)"
+enabled     = false
+
+[tasks.retry]
+kind        = "immediate"
+max_retries = 2
