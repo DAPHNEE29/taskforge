@@ -1,0 +1,36 @@
+[package]
+name = "taskforge"
+version = "0.1.0"
+edition = "2021"
+authors = ["ENSPD Student"]
+description = "TaskForge — Planificateur de tâches système (cron-like) en Rust"
+
+[[bin]]
+name = "taskforge"
+path = "src/main.rs"
+
+[dependencies]
+# Sérialisation / Désérialisation
+serde = { version = "1.0", features = ["derive"] }
+toml = "0.8"
+serde_json = "1.0"
+
+# Date et temps
+chrono = { version = "0.4", features = ["serde"] }
+
+# Logging
+log = "0.4"
+env_logger = "0.11"
+
+# CLI
+clap = { version = "4.5", features = ["derive"] }
+
+# Concurrence
+crossbeam-channel = "0.5"
+
+# Erreurs
+thiserror = "1.0"
+anyhow = "1.0"
+
+[dev-dependencies]
+tempfile = "3.10"
